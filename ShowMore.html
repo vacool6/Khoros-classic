@@ -1,0 +1,149 @@
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+  }
+
+  .card h3 {
+    margin-top: 0;
+    font-size: 1.2em;
+    color: #333;
+  }
+
+  .card p {
+    margin: 5px 0;
+    color: #666;
+  }
+
+  .more-content {
+    max-height: 0;
+    margin: 1rem 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-in-out;
+  }
+
+  .show-more-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+</style>
+
+<div class="container" id="user-container"></div>
+
+<script>
+  function toggleContent(button, moreContent) {
+    if (moreContent.style.maxHeight === "0px" || !moreContent.style.maxHeight) {
+      moreContent.style.maxHeight = moreContent.scrollHeight + "px";
+      button.textContent = "Show Less";
+    } else {
+      moreContent.style.maxHeight = "0px";
+      button.textContent = "Show More";
+    }
+  }
+
+  function createCard(id, subject, body, boardId, href) {
+    function redirect() {
+      console.log("Redirect", href);
+      window.location.href = "/";
+    }
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const h3 = document.createElement("h3");
+    const p1 = document.createElement("p");
+    const h4 = document.createElement("h4");
+
+    h3.textContent = id;
+    p1.textContent = "Subject |  " + subject;
+    h4.textContent = "Board ID | " + boardId;
+
+    const shortContent = document.createElement("p");
+    shortContent.textContent =
+      "This is a short description. Here’s a quick introduction.";
+
+    const moreContent = document.createElement("div");
+    moreContent.className = "more-content";
+
+    for (let i = 1; i <= 5; i++) {
+      const para = document.createElement("p");
+      para.textContent =
+        "This is additional paragraph " +
+        i +
+        " for the expanded content. Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+      moreContent.appendChild(para);
+    }
+
+    const showMoreBtn = document.createElement("button");
+    showMoreBtn.className = "show-more-btn";
+    showMoreBtn.textContent = "Show More";
+    showMoreBtn.onclick = () => toggleContent(showMoreBtn, moreContent);
+
+    const showMoreRedirectBtn = document.createElement("button");
+    showMoreRedirectBtn.className = "show-more-btn";
+    showMoreRedirectBtn.textContent = "Show More Redirect";
+    showMoreRedirectBtn.onclick = () => redirect();
+
+    showMoreBtn.style.display = "block";
+    showMoreRedirectBtn.style.display = "block";
+
+    card.appendChild(h3);
+    card.appendChild(p1);
+    card.appendChild(shortContent);
+    card.appendChild(moreContent);
+    card.appendChild(h4);
+    card.appendChild(showMoreBtn);
+    card.appendChild(showMoreRedirectBtn);
+
+    return card;
+  }
+
+  async function fetchUsers() {
+    try {
+      const response = await fetch(
+        "/api/2.0/search?q=select * from messages where author.id = '30036'"
+      );
+
+      const messages = await response.json();
+      const container = document.getElementById("user-container");
+      console.log(messages.data);
+      messages.data.items.forEach((e) => {
+        const card = createCard(e.id, e.subject, e.body, e.board.id, e.href);
+        container.appendChild(card);
+      });
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  }
+
+  window.onload = fetchUsers;
+</script>

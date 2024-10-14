@@ -1,0 +1,204 @@
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  .carousel-container {
+    position: relative;
+    margin: 4rem;
+    width: 40rem;
+    height: 20rem;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .carousel {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: 100%;
+  }
+
+  .carousel-item {
+    min-width: 100%;
+    height: 20rem;
+    background-color: #333;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .carousel-indicators {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+  }
+
+  .carousel-indicators button {
+    width: 10px;
+    height: 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+  }
+
+  .carousel-indicators button.active {
+    background-color: white;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+
+  section {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+  }
+  .popup {
+    background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+    display: none;
+  }
+
+  .popup-content {
+    background-color: white;
+    width: 25rem;
+    height: 15rem;
+    border-radius: 4px;
+    padding: 1rem;
+  }
+
+  .close-btn {
+    padding: 0.5rem;
+    margin-bottom: 0.25rem;
+    cursor: pointer;
+  }
+</style>
+
+<section>
+  <div class="carousel-container">
+    <div class="carousel"></div>
+    <div class="carousel-indicators"></div>
+  </div>
+  <div class="popup">
+    <div class="popup-content">
+      <button class="close-btn">X</button>
+    </div>
+  </div>
+</section>
+
+<script>
+  let currentIndex = 0;
+  const carousel = document.querySelector(".carousel");
+  const carouselIndicators = document.querySelector(".carousel-indicators");
+  const popup = document.querySelector(".popup");
+  const popupContent = document.querySelector(".popup-content");
+  const closeBtn = document.querySelector(".close-btn");
+
+  const images = [
+    "https://www.bing.com/th/id/OGC.7304cf267c341decbdc20ee6ff5994e4?pid=1.7&rurl=https%3a%2f%2fmedia1.tenor.com%2fimages%2f7304cf267c341decbdc20ee6ff5994e4%2ftenor.gif%3fitemid%3d15690515&ehk=wDnDztrw72RNQjmPPsbJVM7Ql9jI%2bwlLdKAbLe9Az%2f0%3d",
+    "https://www.bing.com/th/id/OGC.cd09fcfbf22517ab296bc5e2a737e71e?pid=1.7&rurl=https%3a%2f%2fwww.gifcen.com%2fwp-content%2fuploads%2f2021%2f02%2fdemon-slayer-gif-5.gif&ehk=NiJTaRifZVl2cxULPOwpCBAlwrQ1CmoJWhkaT67Wr88%3d",
+    "https://www.bing.com/th/id/OGC.3da57bf0d66a2198912fcc9d90bc6b8a?pid=1.7&rurl=https%3a%2f%2f64.media.tumblr.com%2fb4b985cff041904d81aa11f0633f2a9a%2f3861eea12e1a2fa0-c7%2fs1280x1920%2f20c6e1729b83e5ba8d8d8c948c4e75a53f57df73.gif&ehk=KF6onDeDI7wxN%2fd99cCevvqGnE2hQpcTpho3md9ot88%3d",
+    "https://www.bing.com/th/id/OGC.5257f2193d0949a127c8d8079c76a7b6?pid=1.7&rurl=https%3a%2f%2fmedia.tenor.com%2fWP4nYT1J1-wAAAAC%2fdemon-slayer-anime.gif&ehk=b%2bj2rdOA11A%2br3KC4C5Y2kj1okKsmhlBClq9b0JZ%2ba0%3d",
+  ];
+
+  for (let i = 0; i < images.length; i++) {
+    const div = document.createElement("div");
+    const img = document.createElement("img");
+    const btn = document.createElement("button");
+
+    div.className = "carousel-item";
+    img.setAttribute("src", images[i]);
+
+    div.style.cursor = "zoom-in";
+    div.append(img);
+    carousel.append(div);
+    carouselIndicators.append(btn);
+
+    btn.addEventListener("click", () => goToSlide(i));
+    div.addEventListener("click", () => openModal(i));
+  }
+
+  closeBtn.addEventListener("click", () => closeModal());
+
+  let totalItems = document.querySelectorAll(".carousel-item").length;
+
+  let indicators = document.querySelectorAll(".carousel-indicators button");
+
+  indicators[0].classList.add("active");
+
+  let autoScroll = setInterval(() => {
+    moveCarousel(1);
+  }, 1500);
+
+  function moveCarousel(direction) {
+    currentIndex += direction;
+
+    if (currentIndex < 0) {
+      currentIndex = totalItems - 1;
+    } else if (currentIndex >= totalItems) {
+      currentIndex = 0;
+    }
+
+    updateCarousel();
+  }
+
+  function goToSlide(index) {
+    currentIndex = index;
+    updateCarousel();
+
+    clearInterval(autoScroll);
+    autoScroll = setInterval(() => {
+      moveCarousel(1);
+    }, 1500);
+  }
+
+  function updateCarousel() {
+    const translateX = -currentIndex * 100;
+    carousel.style.transform = "translateX(" + translateX + "%)";
+
+    indicators.forEach((indicator, index) => {
+      indicator.classList.toggle("active", index === currentIndex);
+    });
+  }
+
+  function openModal(index) {
+    const img = document.createElement("img");
+    const a = document.createElement("a");
+
+    popup.style.display = "flex";
+    img.style.height = "10rem";
+    img.setAttribute("src", images[index]);
+    a.innerText = "Click to redirect";
+    a.href = "https://italent2.demo.lithium.com";
+    a.target = "_blank";
+
+    popupContent.append(img);
+    popupContent.append(a);
+  }
+
+  function closeModal() {
+    popup.style.display = "none";
+    document.querySelector(".popup-content > img").remove();
+    document.querySelector(".popup-content > a").remove();
+  }
+</script>

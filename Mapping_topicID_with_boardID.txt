@@ -1,0 +1,48 @@
+const apiUrlBase = "/api/2.0/search?q=select topic.id,board.id from messages where author.id = '30036'";
+
+async function fetchAllData() {
+  let nextCursor = '';
+  
+  try {
+    while (true) {
+      const apiUrl = nextCursor ? `${apiUrlBase} CURSOR "${nextCursor}"` : apiUrlBase;
+      
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
+      }
+      
+      const data = await response.json();
+
+      for (let i of data.data.items) {
+        const topicId = i.topic.id;
+        const boardId = i.board.id;
+        
+        const updateApiUrl = `/restapi/vc/messages/id/${topicId}/metadata/key/custom.source_board_id/set?value=${boardId}`;
+
+        const updateResponse = await fetch(updateApiUrl, {
+          method: 'POST'
+        });
+
+        if (!updateResponse.ok) {
+          console.error(`Failed to update topic ${topicId} with board ${boardId}: `, updateResponse.statusText);
+        } else {
+          console.log(`Successfully updated topic ${topicId} with board ${boardId}`);
+        }
+          
+      }
+        
+      if (data.data.next_cursor) {
+        nextCursor = data.data.next_cursor;
+      } else {
+        break;
+      }
+    }
+    
+    console.log('Done!');
+  } catch (error) {
+    console.error('There was a problem with the fetch operation:', error);
+  }
+}
+
+fetchAllData();
