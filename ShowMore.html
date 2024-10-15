@@ -46,30 +46,27 @@
     transition: max-height 0.2s ease-in-out;
   }
 
-  .show-more-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
+  .show-more-link,
+  .show-less-link {
+    display: inline;
     cursor: pointer;
-    border-radius: 5px;
-    margin-top: 10px;
+    font-weight: 700;
+  }
+
+  .show-less-link {
+    display: inline-block;
+  }
+
+  .show-more-link:hover,
+  .show-less-link:hover {
+    text-decoration: underline;
+    color: #007bff;
   }
 </style>
 
 <div class="container" id="user-container"></div>
 
 <script>
-  function toggleContent(button, moreContent) {
-    if (moreContent.style.maxHeight === "0px" || !moreContent.style.maxHeight) {
-      moreContent.style.maxHeight = moreContent.scrollHeight + "px";
-      button.textContent = "Show Less";
-    } else {
-      moreContent.style.maxHeight = "0px";
-      button.textContent = "Show More";
-    }
-  }
-
   function createCard(id, subject, body, boardId, href) {
     function redirect() {
       console.log("Redirect", href);
@@ -82,14 +79,29 @@
     const h3 = document.createElement("h3");
     const p1 = document.createElement("p");
     const h4 = document.createElement("h4");
+    const shortContent = document.createElement("p");
+    const showMoreLink = document.createElement("p");
+    const showLessLink = document.createElement("p");
 
     h3.textContent = id;
     p1.textContent = "Subject |  " + subject;
     h4.textContent = "Board ID | " + boardId;
+    showMoreLink.innerText = "Show more";
+    showLessLink.innerText = "Show Less";
 
-    const shortContent = document.createElement("p");
-    shortContent.textContent =
-      "This is a short description. Here’s a quick introduction.";
+    showMoreLink.className = "show-more-link";
+    showLessLink.className = "show-less-link";
+
+    shortContent.innerHTML =
+      "This is a short description. Life can be challenging but it doest matter.Here’s a quick introduction... ";
+
+    shortContent.appendChild(showMoreLink);
+
+    showMoreLink.onclick = () => {
+      moreContent.style.maxHeight = moreContent.scrollHeight + "px";
+      showMoreLink.style.display = "none";
+      showLessLink.style.display = "inline-block";
+    };
 
     const moreContent = document.createElement("div");
     moreContent.className = "more-content";
@@ -103,26 +115,25 @@
       moreContent.appendChild(para);
     }
 
-    const showMoreBtn = document.createElement("button");
-    showMoreBtn.className = "show-more-btn";
-    showMoreBtn.textContent = "Show More";
-    showMoreBtn.onclick = () => toggleContent(showMoreBtn, moreContent);
+    moreContent.appendChild(showLessLink);
 
-    const showMoreRedirectBtn = document.createElement("button");
-    showMoreRedirectBtn.className = "show-more-btn";
-    showMoreRedirectBtn.textContent = "Show More Redirect";
-    showMoreRedirectBtn.onclick = () => redirect();
-
-    showMoreBtn.style.display = "block";
-    showMoreRedirectBtn.style.display = "block";
+    showLessLink.onclick = () => {
+      if (
+        moreContent.style.maxHeight === "0px" ||
+        !moreContent.style.maxHeight
+      ) {
+        moreContent.style.maxHeight = moreContent.scrollHeight + "px";
+      } else {
+        moreContent.style.maxHeight = "0px";
+      }
+      showMoreLink.style.display = "inline";
+    };
 
     card.appendChild(h3);
     card.appendChild(p1);
+    card.appendChild(h4);
     card.appendChild(shortContent);
     card.appendChild(moreContent);
-    card.appendChild(h4);
-    card.appendChild(showMoreBtn);
-    card.appendChild(showMoreRedirectBtn);
 
     return card;
   }

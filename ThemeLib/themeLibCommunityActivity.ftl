@@ -37,6 +37,22 @@
   .message-list{
     display: none;
   }
+
+  .show-more,
+  .show-less {
+    color: #007bff;
+    cursor:pointer;
+  }
+
+  .show-more:hover,
+  .show-less:hover {
+    text-decoration: underline;
+  }
+
+  .more-content{
+    display:none;
+  }
+
 </style>
 
 
@@ -117,8 +133,30 @@
 const likeButtons = document.querySelectorAll('.like-btn');
 const unlikeButtons = document.querySelectorAll('.unlike-btn');
 
+const showLess = document.querySelectorAll('.show-less');
+const showMore = document.querySelectorAll('.show-more');
+const lessContent = document.querySelectorAll('.less-content');
+const moreContent = document.querySelectorAll('.more-content');
 
- 
+for(let k = 0;k<lessContent.length;k++){
+  if(lessContent[k].innerText.length<250){
+    showMore[k].style.display= 'none';
+  }
+}
+
+for(let i = 0; i<showMore.length;i++){
+  showMore[i].addEventListener('click', function() {
+    moreContent[i].style.display = 'block';
+    lessContent[i].style.display = 'none';
+  })
+}
+
+for(let j = 0; j<showMore.length;j++){
+  showLess[j].addEventListener('click', function() {
+    lessContent[j].style.display = 'block';
+    moreContent[j].style.display = 'none';
+  })
+}
              async function getCurUSerKudos(){
                const response = await fetch("/api/2.0/search?q=select * FROM kudos WHERE user.id = '" + ${user.id} + "'");
                const  data = await response.json();

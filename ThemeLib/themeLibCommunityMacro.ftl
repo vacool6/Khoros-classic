@@ -28,7 +28,16 @@
              <#assign strippedBody = msg.body?replace("<span class=\"lia-unicode-emoji\" title=\":[a-z_]+:\">(.*?)</span>", "", "r") />
              <#assign tmpBody = utilities.liRemoveHTML(strippedBody) />         
              <#assign bodyText = commonUtils.dataSanitizer(tmpBody, false) />
-             <#noautoesc>${utils.html.truncate(globalMessageCharLimit, bodyText, '...')}</#noautoesc>
+             
+             <section class="less-content">
+              <#noautoesc>${utils.html.truncate(globalMessageCharLimit, bodyText, '... ')}<b class="show-more">Show more</b></#noautoesc>
+             </section>
+
+             <section class="more-content">
+               <p>${bodyText}</p>
+               <b class="show-less">Show less</b>
+             </section>
+
              <section>   
                 <button class="like-btn" data-msg-index="${msg.id}">
                  <img src="https://italent2.demo.lithium.com/html/assets/unlike.png?version=preview" alt="thumbs-down" width="15" height="15"/>
