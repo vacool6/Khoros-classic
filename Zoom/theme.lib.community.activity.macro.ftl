@@ -15,17 +15,12 @@
     <#-- custom message tile -->
     <article class="custom-message-tile ${solved} ${unread}">
         <div>
-        <#--  updated the code aspart of https://italent.atlassian.net/browse/ZOOM-4  -->
-            <div class="custom-activity-header">
-                <@utilities.renderAuthorAvathar msg />
                 <h3>
                     <#if msg.conversation.solved>
                         <i class="${solved}"><small>${text.format('theme-lib.general.thread-solved')}!</small></i>
                     </#if>
                     <a href="${msg.view_href}" title="${msg.subject}">${msg.subject}</a>
                 </h3>
-            </div>
-            <#--  End of  https://italent.atlassian.net/browse/ZOOM-4 -->
             <p>
                 <#assign tmpBody = utilities.liRemoveHTML(msg.body) />
                 <#assign bodyText = commonUtils.dataSanitizer(tmpBody, true) />
@@ -56,13 +51,12 @@
         <#--  Ends: https://italent.atlassian.net/browse/ZOOM-5 -->
         </div>
         <aside>
-            <@utilities.messageCategoryInfoo (msg)!"" />
+            <@utilities.communityActivityfooter (msg)!"" />
             <#--  <@utilities.renderPostTime msg />  -->
-            <#--  <@utilities.communityActivityfooter msg />  -->
             <@utilities.renderLatestReplyTime msg />
         </aside>
         <footer>
-            <#--  <@utilities.renderAuthorInfo msg />  -->
+            <@utilities.renderAuthorInfo msg />
             <#--  <@utilities.messageStatistics msg/>  -->
         </footer>
     </article>

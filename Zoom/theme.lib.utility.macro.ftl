@@ -1,19 +1,18 @@
 <#include "theme-lib.hermes-variables.ftl" />
 <#--  Added by iTalent as part of https://italent.atlassian.net/browse/ZOOM-4  -->
-<#macro messageCategoryInfoo msg>    
+<#macro communityActivityfooter msg>    
     <#local userData  = (msg.author)!'' />
     <#local username = (userData.login)!'' />
     <div class="recent-activity-footer">
-        <div class="msg-auther-info">
+        <#--  <div class="msg-auther-info">
                 <strong>
-                    <#--  <span>${text.format("general.by")} </span>  -->
                     <a class="lia-link-navigation lia-page-link lia-user-name-link" target="_self" href="${(userData.view_href)!''}" rel="author" title="${text.format('theme-lib.general.view-profile')}">
                         <span class="<#if (userData.rank.bold)!false>login-bold</#if>" <#if (userData.rank.color)?has_content>style="color:#${(userData.rank.color)!''}"</#if>>${username}</span>
                     </a>
                 </strong>
                 <small>&bull;</small> <em>${(userData.rank.name)!''}</em>
             
-        </div>
+        </div>  -->
         <div class="custom-tile-category">
             <strong>
                 <span>${text.format('theme-lib.general.posted-in')} </span>
@@ -37,7 +36,7 @@
     </div>
 </#macro>
 
-<#macro renderAuthorAvathar msg>
+<#--  <#macro renderAuthorAvathar msg>
     <#local userData  = (msg.author)!'' />
     <#local username = (userData.login)!'' />
     
@@ -46,7 +45,7 @@
             <img class="lia-user-avatar-message" alt="${username}" src="${(userData.avatar.profile)!''}" />
         </a>
     </div>
-</#macro>
+</#macro>  -->
 
 <#--  End of https://italent.atlassian.net/browse/ZOOM-4  -->
 
@@ -60,7 +59,7 @@
             <img class="lia-user-avatar-message" alt="${username}" src="${(userData.avatar.profile)!''}" />
         </a>
         <strong>
-            <span>${text.format("general.by")} </span>
+            <span>${text.format("general.by_activityFeeds")} </span>
             <a class="lia-link-navigation lia-page-link lia-user-name-link" target="_self" href="${(userData.view_href)!''}" rel="author" title="${text.format('theme-lib.general.view-profile')}">
                 <span class="<#if (userData.rank.bold)!false>login-bold</#if>" <#if (userData.rank.color)?has_content>style="color:#${(userData.rank.color)!''}"</#if>>${username}</span>
             </a>
