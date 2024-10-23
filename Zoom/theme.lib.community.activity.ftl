@@ -1,24 +1,3 @@
-<style>
-.disabled-icons {
-    pointer-events:none; 
-    opacity:0.6;  
-  }
-
-  .show-more,
-  .show-less {
-    color: #007bff;
-    cursor:pointer;
-  }
-
-  .show-more:hover,
-  .show-less:hover {
-    text-decoration: underline;
-  }
-
-  .more-content{
-    display:none;
-  }
-</style>
 <#-- custom community activity -->
 <#import "theme-lib.common-functions.ftl" as commonUtils />
 <#import "theme-lib.community-activity-macros.ftl" as messageUtils />

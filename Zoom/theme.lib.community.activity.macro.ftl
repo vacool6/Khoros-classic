@@ -15,12 +15,17 @@
     <#-- custom message tile -->
     <article class="custom-message-tile ${solved} ${unread}">
         <div>
-            <h3>
-                <#if msg.conversation.solved>
-                    <i class="${solved}"><small>${text.format('theme-lib.general.thread-solved')}!</small></i>
-                </#if>
-                <a href="${msg.view_href}" title="${msg.subject}">${msg.subject}</a>
-            </h3>
+        <#--  updated the code aspart of https://italent.atlassian.net/browse/ZOOM-4  -->
+            <div class="custom-activity-header">
+                <@utilities.renderAuthorAvathar msg />
+                <h3>
+                    <#if msg.conversation.solved>
+                        <i class="${solved}"><small>${text.format('theme-lib.general.thread-solved')}!</small></i>
+                    </#if>
+                    <a href="${msg.view_href}" title="${msg.subject}">${msg.subject}</a>
+                </h3>
+            </div>
+            <#--  End of  https://italent.atlassian.net/browse/ZOOM-4 -->
             <p>
                 <#assign tmpBody = utilities.liRemoveHTML(msg.body) />
                 <#assign bodyText = commonUtils.dataSanitizer(tmpBody, true) />
@@ -36,7 +41,10 @@
                     <#noautoesc>
                         ${msg.body}
                     </#noautoesc>
-                    <b class="show-less">Show less</b>
+                    <br>
+                    <b class="show-less" style="margin:1rem 0;">Show less</b>
+                    <br>
+                    <br>
                  </section>
                 <#else>
                   <#noautoesc>
@@ -48,13 +56,14 @@
         <#--  Ends: https://italent.atlassian.net/browse/ZOOM-5 -->
         </div>
         <aside>
-            <@utilities.renderPostTime msg />&vert;
-            <@utilities.messageCategoryInfo (msg)!"" />
+            <@utilities.messageCategoryInfoo (msg)!"" />
+            <#--  <@utilities.renderPostTime msg />  -->
+            <#--  <@utilities.communityActivityfooter msg />  -->
             <@utilities.renderLatestReplyTime msg />
         </aside>
         <footer>
-            <@utilities.renderAuthorInfo msg />
-            <@utilities.messageStatistics msg/>
+            <#--  <@utilities.renderAuthorInfo msg />  -->
+            <#--  <@utilities.messageStatistics msg/>  -->
         </footer>
     </article>
     <#--/custom message tile -->
